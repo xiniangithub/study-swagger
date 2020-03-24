@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context.xsd
+            http://www.springframework.org/schema/mvc
+            http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    
+    <context:component-scan base-package="com.wez.study.swagger.ctrl"></context:component-scan>
+    
+    <mvc:annotation-driven />
+    
+    <!-- 引入swagger相关 ，注意静态资源文件映射是否打开-->
+    <!-- 静态资源访问 -->
+    <mvc:default-servlet-handler/>
+    <mvc:resources mapping="swagger-ui.html" location="classpath:/META-INF/resources/" />
+    <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/" />
+    
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <!-- 拦截所有的请求，这个必须写在前面，也就是写在【不拦截】的上面 -->
+            <mvc:mapping path="/**" />
+            <!-- 不拦截的请求 -->
+            <mvc:exclude-mapping path="/swagger-resources/**"/><!-- swagger静态资源-->
+            <mvc:exclude-mapping path="/v2/**"/><!-- swagger静态资源-->
+            <mvc:exclude-mapping path="/swagger-ui.html#!/**"/><!-- swagger静态资源-->
+            <mvc:exclude-mapping path="/swagger-resources/**"/><!-- swagger静态资源-->
+            <bean class="com.wez.study.swagger.interceptor.Swagger2Interceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+</beans>
